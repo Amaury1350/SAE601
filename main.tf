@@ -1,21 +1,20 @@
 terraform {
+  required_version = ">= 0.15"
   required_providers {
     proxmox = {
-      source = "bpg/proxmox"
-      version = "0.42.0"
+      source = "telmate/proxmox"
     }
   }
 }
 
 provider "proxmox" {
-  endpoint = "https://172.18.61.22:8006/"
-  api_token = var.api_token
-  insecure = false
-  ssh {
-    agent    = true
-    username = "root"
-  }
+  # pm_debug = true
+  pm_tls_insecure = true
+  pm_api_url = "https://172.18.61.22:8006/api2/json"
+  PM_API_TOKEN_ID="terraform@pve"
+  PM_API_TOKEN_SECRET="0652e5d0-49ef-4fd5-95af-de7ea4d3fdd1"
 }
+
 resource "proxmox_vm_qemu" "master" {
   name             = "master"
   target_node      = "datacenter"
@@ -40,10 +39,6 @@ resource "proxmox_vm_qemu" "master" {
   }
 
   ipconfig0 = "ip=172.18.61.23/24,gw=172.18.0.254"
-
-  sshkeys = <<EOF
-  ssh-rsa AAAAB3... votre_cle_ssh
-  EOF
 }
 
 resource "proxmox_vm_qemu" "worker" {
@@ -71,8 +66,4 @@ resource "proxmox_vm_qemu" "worker" {
   }
 
   ipconfig0 = "ip=172.18.61.24${count.index + 1}/24,gw=172.18.0.254"
-
-  sshkeys = <<EOF
-  ssh-rsa AAAAB3... votre_cle_ssh
-  EOF
 }
