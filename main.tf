@@ -8,11 +8,11 @@ terraform {
 }
 
 provider "proxmox" {
-  # pm_debug = true
+  pm_debug = true
   pm_tls_insecure = true
   pm_api_url = "https://172.18.61.22:8006/api2/json"
-  PM_API_TOKEN_ID="terraform@pve"
-  PM_API_TOKEN_SECRET="0652e5d0-49ef-4fd5-95af-de7ea4d3fdd1"
+  pm_api_token_id="terraform@pve"
+  pm_api_token_secret="0652e5d0-49ef-4fd5-95af-de7ea4d3fdd1"
 }
 
 resource "proxmox_vm_qemu" "master" {
